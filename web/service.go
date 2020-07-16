@@ -309,6 +309,7 @@ func (s *service) Client() *http.Client {
 	}
 }
 
+// Handle registers a handler with the given pattern. Pattern matching follows the conventions laid out in  net.http.ServeMux
 func (s *service) Handle(pattern string, handler http.Handler) {
 	var seen bool
 	s.RLock()
@@ -340,6 +341,7 @@ func (s *service) Handle(pattern string, handler http.Handler) {
 	s.mux.Handle(pattern, handler)
 }
 
+// HandleFunc registers a handler function with the given pattern. Pattern matching follows the conventions laid out in  net.http.ServeMux
 func (s *service) HandleFunc(pattern string, handler func(http.ResponseWriter, *http.Request)) {
 
 	var seen bool

@@ -2,6 +2,7 @@ package memory
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"testing"
 	"time"
@@ -274,5 +275,28 @@ func basictest(s store.Store, t *testing.T) {
 		if len(results) != 5 {
 			t.Error("Expected 5 results, got ", len(results))
 		}
+	}
+}
+
+func TestMemoryResultsOrdering(t *testing.T) {
+	s := NewStore()
+	s.Init(store.Table("some-prefix"), store.Database("some-namespace"))
+
+	for i := 0; i < 100; i++ {
+		if err := s.Write(&store.Record{Key: fmt.Sprintf("key%d", rand.Int31()), Value: []byte("asd")}); err != nil {
+			t.Fatalf("Error writing %s", err)
+		}
+	}
+
+	recs, err := s.Read("key", store.ReadPrefix(), store.ReadLimit(99))
+	if err != nil {
+		t.Fatalf("Error reading %s", err)
+	}
+	prev := ""
+	for _, rec := range recs {
+		if prev > rec.Key {
+			t.Fatalf("Not in order. Prev %s, Curr %s", prev, rec.Key)
+		}
+		prev = rec.Key
 	}
 }

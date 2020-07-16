@@ -278,6 +278,28 @@ func TestVerify(t *testing.T) {
 			},
 			Error: auth.ErrForbidden,
 		},
+		{
+			Name:     "DifferentNamespace",
+			Resource: srvResource,
+			Account: &auth.Account{
+				ID:     "foo@bar.com",
+				Issuer: "legal-resort-annuity",
+				Type:   "user",
+			},
+			Rules: []*auth.Rule{
+				&auth.Rule{
+					Resource: &auth.Resource{
+						Type:     "*",
+						Name:     "*",
+						Endpoint: "*",
+					},
+					Access:   auth.AccessGranted,
+					ID:       "default",
+					Priority: 0,
+					Scope:    "",
+				},
+			},
+		},
 	}
 
 	for _, tc := range tt {

@@ -11,6 +11,7 @@ import (
 	"github.com/micro/go-micro/v2/auth/token"
 	"github.com/micro/go-micro/v2/auth/token/jwt"
 	"github.com/micro/go-micro/v2/client"
+	"github.com/micro/go-micro/v2/logger"
 )
 
 // svc is the service implementation of the Auth interface
@@ -134,6 +135,7 @@ func (s *svc) Rules(opts ...auth.RulesOption) ([]*auth.Rule, error) {
 	if options.Context == nil {
 		options.Context = context.TODO()
 	}
+	logger.Infof("Checking namespace %s %s", options.Namespace, s.options.Issuer)
 	if len(options.Namespace) == 0 {
 		options.Namespace = s.options.Issuer
 	}
